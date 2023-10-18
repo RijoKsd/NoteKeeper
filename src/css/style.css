@@ -128,6 +128,14 @@
   --spacing-19: calc(var(--spacing-base) * 19);
   --spacing-20: calc(var(--spacing-base) * 20);
 
+  /* Box shadow */
+
+  --shadow-1: 0px 1px 3px 1px #00000026, 0px 1px 2px 0px #0000004d;
+  --shadow-2: 0px 2px 6px 2px #00000026, 0px 1px 2px 0px #0000004d;
+  --shadow-3: 0px 1px 3px 0px #0000004d, 0px 4px 8px 3px #00000026;
+  --shadow-4: 0px 2px 3px 0px #0000004d, 0px 6px 10px 4px #00000026;
+  --shadow-5: 0px 4px 4px 0px #0000004d, 0px 8px 12px 6px #00000026;
+
   /* Border radius */
 
   --radius-extra-small: 4px;
@@ -205,7 +213,7 @@
   box-sizing: border-box;
 }
 li {
-  display: none;
+  list-style: none;
 }
 a,
 img,
@@ -213,7 +221,7 @@ span,
 input,
 button,
 textarea {
-  display: none;
+  display: block;
 }
 
 a {
@@ -305,7 +313,6 @@ body {
   font-size: var(--fs-headline-large);
   line-height: var(--lh-headline-large);
   font-weight: var(--fw-regular);
-  
 }
 
 .text-headline-medium {
@@ -337,43 +344,42 @@ body {
   line-height: var(--lh-title-small);
   font-weight: var(--fw-medium);
   letter-spacing: var(--ls-p-010);
-} 
-
+}
 
 .text-body-large {
   font-size: var(--fs-body-large);
   line-height: var(--lh-body-large);
   font-weight: var(--fw-regular);
   letter-spacing: var(--ls-p-025);
-} 
+}
 
 .text-body-medium {
   font-size: var(--fs-body-medium);
   line-height: var(--lh-body-medium);
   font-weight: var(--fw-regular);
   letter-spacing: var(--ls-p-025);
-} 
+}
 
 .text-body-small {
   font-size: var(--fs-body-small);
   line-height: var(--lh-body-small);
   font-weight: var(--fw-regular);
   letter-spacing: var(--ls-p-040);
-} 
+}
 
 .text-label-large {
   font-size: var(--fs-label-large);
   line-height: var(--lh-label-large);
   font-weight: var(--fw-medium);
   letter-spacing: var(--ls-p-010);
-} 
+}
 
 .text-label-medium {
   font-size: var(--fs-label-medium);
   line-height: var(--lh-label-medium);
   font-weight: var(--fw-medium);
   letter-spacing: var(--ls-p-050);
-} 
+}
 
 .text-label-small {
   font-size: var(--fs-label-small);
@@ -385,6 +391,74 @@ body {
   #REUSED STYLE
 \*-----------------------------------*/
 
+.material-symbols-rounded {
+  width: 1em;
+  height: 1em;
+  display: block;
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+}
+
+:has(> .state-layer) {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.state-layer {
+  position: absolute;
+  inset: 0;
+  background-color: var(--state-layer-bg);
+  opacity: 0;
+  transition: opacity var(--tr-duration-short) var(--tr-easing-linear);
+  z-index: -1;
+}
+
+:has(> .state-layer):hover > .state-layer {
+  opacity: 0.08;
+}
+
+:has(> .state-layer):is(:focus, :focus-visible, :focus-within) > .state-layer {
+  opacity: 0.12;
+}
+
+:has(> .state-layer):active > .state-layer {
+  opacity: 0.16;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background-color: var(--surface-container-low);
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: var(--outline-variant);
+  border-radius: 4px;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  background-color: var(--black);
+  z-index: 3;
+  opacity: 0;
+  visibility: hidden;
+  transition: var(--tr-duration-short) var(--tr-easing-linear);
+  transition-property: opacity, visibility;
+}
+.overlay.active{
+  opacity: 0.5;
+  visibility: visible;
+}
+
 /*-----------------------------------*\
   #COMPONENTS
 \*-----------------------------------*/
@@ -393,6 +467,27 @@ body {
  * Icon button
  */
 
+.icon-btn {
+  display: grid;
+  place-items: center;
+  color: var(--on-surface-variant);
+  border-radius: var(--radius-full);
+  --state-layer-bg: var(--on-surface-variant);
+}
+
+.icon-btn large {
+  width: 40px;
+  height: 40px;
+}
+
+.icon-btn small {
+  width: 28px;
+  height: 28px;
+}
+
+.icon-btn .material-symbols-rounded {
+  font-size: 1.8rem;
+}
 /**
  * FAB (Floating Action Button)
  */
@@ -417,6 +512,103 @@ body {
   #SIDEBAR
 \*-----------------------------------*/
 
+.sidebar {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: repeat(2, max-content) 1fr max-content;
+  background-color: var(--surface-container-low);
+  max-width: var(--sidebar-width);
+  width: 100%;
+  padding: var(--spacing-3);
+  border-radius: 0 var(--radius-large) var(--radius-large) 0;
+  box-shadow: var(--shadow-3);
+  z-index: 4;
+  visibility: hidden;
+  transition: var(--tr-duration-long) var(--tr-easing-emphasized);
+  transition-property: transform, visibility;
+}
+.sidebar.active {
+  transform: translateX(100%);
+  visibility: visible;
+}
+
+.sidebar .fab {
+  display: none;
+}
+
+.sidebar > .wrapper {
+  height: 56px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sidebar > .wrapper-1 {
+  padding-inline: var(--spacing-4) var(--spacing-2);
+  margin-block-end: var(--spacing-3);
+}
+
+[data-theme="dark"] .logo-light,
+.logo-dark {
+  display: none;
+}
+
+[data-theme="dark"] .logo-dark {
+  display: block;
+}
+
+.sidebar > .wrapper-2 {
+  padding-inline: var(--spacing-4) var(--spacing-6);
+}
+
+.sidebar .nav {
+  overflow-y: auto;
+}
+
+.nav-item {
+  color: var(--on-surface-variant);
+  --state-layer-bg: var(--on-surface-variant);
+  height: 56px;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-05);
+  padding-inline: var(--spacing-4) var(--spacing-6);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+}
+
+.nav-item.active {
+  background-color: var(--secondary-container);
+  color: var(--on-secondary-container);
+}
+
+.nav-item .text {
+  flex-grow: 1;
+}
+
+.nav-item .icon-btn {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--tr-duration-short) var(--tr-easing-linear);
+}
+
+.nav-item:where(:hover, :focus-within) .icon-btn {
+  opacity: 1;
+  visibility: visible;
+}
+
+.sidebar .cp-info {
+  height: 56px;
+  display: flex;
+  align-items: center;
+  padding-inline: var(--spacing-4);
+  color: var(--on-surface-variant);
+  transition: color var(--tr-duration-short) var(--tr-easing-linear);
+}
 /*-----------------------------------*\
   #MAIN
 \*-----------------------------------*/

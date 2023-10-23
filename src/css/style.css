@@ -894,7 +894,7 @@ body {
   display: block;
 }
 
-[data-them="dark"] .theme-btn {
+[data-theme="dark"] .theme-btn {
   transform: rotate(-90deg);
 }
 

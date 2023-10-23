@@ -4,6 +4,7 @@
  * Import
  */
 
+import { Tooltip } from "./Tooltip.js";
 /**
  *
  *  Creates a navigation item representing  a notebook. This item displays the notebook's name, allows editing
@@ -44,6 +45,9 @@ export const NavItem = function (id, name) {
     </button>
     <div class="state-layer"></div>
   `;
-
+  // Show tooltip on edit and delete button
+  const /** {Array<HTMLElement>} */ $tooltipElems =
+      $navItem.querySelectorAll("[data-tooltip]");
+  $tooltipElems.forEach(($elem) => Tooltip($elem));
   return $navItem;
 };

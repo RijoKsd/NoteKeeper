@@ -124,3 +124,13 @@ const createNotebook = function (event) {
     client.notebook.create(notebookData);
   }
 };
+
+/**
+ * Renders the existing notebook list by retrieving the data from the local storage and passing it to the client.
+ */
+const renderExistedNotebook = function () {
+  const /**{Array} */ notebookList = db.get.notebook();
+  client.notebook.read(notebookList);
+};
+
+renderExistedNotebook();

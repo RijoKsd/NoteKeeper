@@ -4,6 +4,7 @@
  * Module import
  */
 import { addEventOnElements, getGreetingMsg } from "./utils.js";
+import { Tooltip} from "./components/Tooltip.js"
 
 /**
  * Toggle sidebar in small screen
@@ -23,6 +24,14 @@ addEventOnElements($sidebarTogglers, "click", function () {
 });
 
 /**
+ * Initialize tootip behavior for all DOM elements with [data-tooltip] attribute.
+ */
+
+const /** {Array<HTMLElement} */ $tooltipElems = document.querySelectorAll("[data-tooltip]");
+$tooltipElems.forEach($elem => Tooltip($elem));
+
+
+/**
  * Show greeting message on homepage
  */
 
@@ -38,8 +47,6 @@ $greetElem.textContent = getGreetingMsg(currentHour);
  */
 
 const /** {HTMLElement} */ $currentDateElem = document.querySelector("[data-current-date]");
-console.log("🚀 ~ file: app.js:41 ~ currentDateElem:", $currentDateElem);
-
 $currentDateElem.textContent = new Date().toDateString().replace(' ',', ');
 // $currentDateElem.textContent = new Date().toLocaleDateString("en-US", {
 //   weekday: "long",

@@ -22,22 +22,28 @@ const addEventOnElements = function ($elements, eventType, callback) {
 
 const getGreetingMsg = function (currentHour) {
   const /** {string} */ greeting =
+      /*
       currentHour < 5
         ? "Night"
         : currentHour < 12
         ? "Morning"
         : currentHour < 18
         ? "Afternoon"
-        : "evening";
+        : "evening"; 8
+         */
 
-  /* 
-  currentHour < 5 ? "Night" :
-  currentHour < 12 ? "Morning" :
-  currentHour < 15 ? "Noon":
-  currentHour < 17 ? "Afternoon" :
-  currentHour < 20 ? "Evening" :
-  "Night";
-  */
+      currentHour < 5
+        ? "Night"
+        : currentHour < 12
+        ? "Morning"
+        : currentHour < 15
+        ? "Noon"
+        : currentHour < 17
+        ? "Afternoon"
+        : currentHour < 20
+        ? "Evening"
+        : "Night";
+
   return `Good ${greeting}`;
 };
 
@@ -64,13 +70,18 @@ const makeElemEditable = function ($element) {
 };
 
 /**
- * 
+ *
  * Generates a unique ID based on the current timestamp
- * 
+ *
  * @returns {string} A string representation of the current timestamp
  */
 const generateID = function () {
   return new Date().getTime().toString();
-  
 };
-export { addEventOnElements, getGreetingMsg, activeNotebook, makeElemEditable, generateID };
+export {
+  addEventOnElements,
+  getGreetingMsg,
+  activeNotebook,
+  makeElemEditable,
+  generateID,
+};

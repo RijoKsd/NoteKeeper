@@ -93,5 +93,15 @@ export const NavItem = function (id, name) {
       client.notebook.update(id, updatedNotebookData);
     }
   });
+
+  /**
+   * Notebook delete functionality
+   */
+
+  const /** {HTMLElement} */ $navItemDeleteBtn =
+      $navItem.querySelector("[data-delete-btn]");
+  $navItemDeleteBtn.addEventListener("click", function(){
+     const /** {Object} */ modal = DeleteConfirmModal();
+  });
   return $navItem;
 };

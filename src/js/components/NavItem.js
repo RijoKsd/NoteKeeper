@@ -8,6 +8,7 @@ import { Tooltip } from "./Tooltip.js";
 import { activeNotebook, makeElemEditable } from "../utils.js";
 import { db } from "../db.js";
 import { client } from "../client.js";
+import { DeleteConfirmModal } from "./Modal.js";
 
 const /**{HTMLElement} */ $notePanelTitle = document.querySelector(
     "[data-note-panel-title]"
@@ -45,7 +46,7 @@ export const NavItem = function (id, name) {
       class="icon-btn small"
       aria-label="Delete notebook"
       data-tooltip="Delete notebook"
-      data-edit-btn
+      data-delete-btn
     >
       <span class="material-symbols-rounded" aria-hidden="true">delete</span>
       <div class="state-layer"></div>
@@ -100,8 +101,21 @@ export const NavItem = function (id, name) {
 
   const /** {HTMLElement} */ $navItemDeleteBtn =
       $navItem.querySelector("[data-delete-btn]");
-  $navItemDeleteBtn.addEventListener("click", function(){
-     const /** {Object} */ modal = DeleteConfirmModal();
+  $navItemDeleteBtn.addEventListener("click", function () {
+    const /** {Object} */ modal = DeleteConfirmModal(name);
+    modal.open();
+
+    modal.onSubmit(function (isConfirm) {
+      if (isConfirm) {
+        // Delete notebook from database
+        db.delete.notebook(id);
+
+        // Delete notebook from client
+        client.notebook.delete(id);
+      }
+      modal.close();
+    });
   });
+
   return $navItem;
 };

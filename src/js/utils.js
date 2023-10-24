@@ -36,9 +36,7 @@ const getGreetingMsg = function (currentHour) {
         ? "Night"
         : currentHour < 12
         ? "Morning"
-        : currentHour < 15
-        ? "Noon"
-        : currentHour < 17
+        : currentHour < 16
         ? "Afternoon"
         : currentHour < 20
         ? "Evening"
@@ -87,7 +85,19 @@ const generateID = function () {
  * @returns {Object | undefined} The found notebook object, or undefined if not found
  */
 const findNotebook = function (db, notebookId) {
-  return db.notebooks.find(notebook => notebook.id === notebookId);
+  return db.notebooks.find((notebook) => notebook.id === notebookId);
+};
+
+/**
+ * Finds the index of a notebook in an array of notebooks based on its ID.
+ *
+ * @param {Object} db - The object containing an array of notebooks.
+ * @param {string} notebookId - The ID of the notebook to find.
+ * @returns {number} - The index of the found notebook, or -1 if not found
+ */
+
+const findNotebookIndex = function (db, notebookId) {
+  return db.notebooks.findIndex((item) => item.id === notebookId);
 };
 export {
   addEventOnElements,
@@ -96,4 +106,5 @@ export {
   makeElemEditable,
   generateID,
   findNotebook,
+  findNotebookIndex,
 };

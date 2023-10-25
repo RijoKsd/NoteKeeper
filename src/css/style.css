@@ -602,6 +602,7 @@ body {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   align-content: flex-start;
+  flex-grow: 1;
   align-items: stretch;
   gap: var(--spacing-2);
 }
@@ -894,7 +895,7 @@ body {
   display: block;
 }
 
-[data-theme="dark"] .theme-btn {
+[data-theme="dark"] .-btn {
   transform: rotate(-90deg);
 }
 

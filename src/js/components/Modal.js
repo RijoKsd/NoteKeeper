@@ -21,7 +21,7 @@ const NoteModal = function (
   const /**{HTMLElement} */ $modal = document.createElement("div");
   $modal.classList.add("modal");
 
-  $modal.innerHTML =  `
+  $modal.innerHTML = `
     <button class="icon-btn large" aria-label="Close modal" data-close-btn>
       <span class="material-symbols-rounded" aria-hidden="true">close</span>
       <div class="state-layer"></div>
@@ -50,29 +50,61 @@ ${text}</textarea
     </div>
   `;
 
-  const /** {HTMLElement} */ [$titleField, $textField] = $modal.querySelectorAll("[data-note-field]");
+  const /**{HTMLElement} */ $submitBtn =
+      $modal.querySelector("[data-submit-btn]");
+  $submitBtn.disabled = true;
+
+  const /** {HTMLElement} */ [$titleField, $textField] =
+      $modal.querySelectorAll("[data-note-field]");
+
+  const enableSubmit = function () {
+    $submitBtn.disabled = !$titleField.value && !$textField.value;
+  };
+
+  $textField.addEventListener("keyup", enableSubmit);
+  $titleField.addEventListener("keyup", enableSubmit);
 
   /**
    * Opens the note modal by appending it to the document body and setting focus on the title field
    */
-  const open = function (){
+  const open = function () {
     document.body.appendChild($modal);
     document.body.appendChild($overlay);
     $titleField.focus();
-  }
+  };
 
   /** Closes the note modal by removing it from the document body */
 
-  const close = function (){
+  const close = function () {
     document.body.removeChild($modal);
     document.body.removeChild($overlay);
-  }
+  };
 
   // Attach click event to closeBtn, when click call the close modal function
-  const /**{HTMLElement} */ $closeBtn = $modal.querySelector("[data-close-btn]");
+  const /**{HTMLElement} */ $closeBtn =
+      $modal.querySelector("[data-close-btn]");
   $closeBtn.addEventListener("click", close);
 
-  return { open, close}
+  
+  /**
+   *  Handles the submission of the note  within the modal
+   * 
+   * @param {Function} callback - The callback function to execute with the submitted note data
+   */
+
+
+  const onSubmit = function (callback) {
+    $submitBtn.addEventListener("click", function () {
+      const /**{Object} */ noteData = {
+        title: $titleField.value,
+        text: $textField.value,
+      };
+
+      callback(noteData);
+    });
+  };
+
+  return { open, close, onSubmit };
 };
 
 /**

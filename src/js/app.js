@@ -152,4 +152,33 @@ addEventOnElements($noteCreateBtns, "click", function () {
   // Create and open a new modal
   const /** {Object} */ modal = NoteModal();
   modal.open();
+
+  // Handle the submission of the new note to the database and client
+  modal.onSubmit((noteObj) => {
+    const /**{string} */ activeNotebookId = document.querySelector(
+        "[data-notebook].active"
+      ).dataset.notebook;
+    const /**{Object} */ noteData = db.post.note(activeNotebookId, noteObj);
+    client.note.create(noteData);
+    modal.close();
+  });
 });
+
+/**
+ * Render existing notes in the active notebook
+ * Retrieves note data from the database based on the active notebook's ID 
+ * and uses the client to display the notes
+ */
+
+const renderExistedNote = function () {
+  const /** {string | undefined} */ activeNotebookId = document.querySelector("[data-notebook].active")?.dataset.notebook;
+
+  if (activeNotebook) {
+    const /** {Array<Object>} */ noteList = db.get.note(activeNotebookId); 
+
+    // Display existing note
+    client.note.read(noteList);
+   }
+}
+
+renderExistedNote();

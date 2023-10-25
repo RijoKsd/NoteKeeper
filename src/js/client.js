@@ -5,6 +5,7 @@
  */
 import { NavItem } from "./components/NavItem.js";
 import { activeNotebook } from "./utils.js";
+import { Card } from "./components/Card.js";
 
 const /**{HTMLElement} */ $sidebarList = document.querySelector(
     "[data-sidebar-list]"
@@ -14,6 +15,29 @@ const /**{HTMLElement} */ $notePanelTitle = document.querySelector(
   );
 const /**{HTMLElement} */ $notePanel =
     document.querySelector("[data-note-panel]");
+
+const /** {Array<HTMLElement } */ $noteCreateBtns = document.querySelectorAll("[data-note-create-btn]");
+
+const /** {string} */ emptyNotesTemplate = `
+ <div class="empty-notes">
+    <span class="material-symbols-rounded" aria-hidden="true">note_stack</span>
+    <div class="text-headline-small">No notes</div>
+  </div> 
+
+`;
+
+/**
+ * Enables or disables "Create Note" buttons based on whether there are any notebooks
+ * 
+ * @param {boolean} isThereAnyNotebooks - Indicates whether there are any notebooks
+ */
+
+const disabledNoteCreateBtns = function(isThereAnyNotebook){
+  $noteCreateBtns.forEach($item =>{
+    $item[isThereAnyNotebook ? 'removeAttribute': 'setAttribute']('disabled', '');
+  })
+
+}
 /**
  * The client object manages interactions with the user interface (UI) to create, read, update and delete notebooks and notes
  * It provides functions for performing these operations and updating the UI accordingly
@@ -37,6 +61,8 @@ export const client = {
       $sidebarList.appendChild($navItem);
       activeNotebook.call($navItem);
       $notePanelTitle.textContent = notebookData.name;
+      $notePanel.innerHTML = emptyNotesTemplate;
+      disabledNoteCreateBtns(true);
     },
     /**
      * Reads and displays a list of notebooks in the UI
@@ -44,6 +70,7 @@ export const client = {
      * @param {Array<Object>} notebookList - List of notebook data to display
      */
     read(notebookList) {
+      disabledNoteCreateBtns(notebookList.length);
       notebookList.forEach((notebookData, index) => {
         const /** {HTMLElement} */ $navItem = NavItem(
             notebookData.id,
@@ -95,9 +122,44 @@ export const client = {
         $activeNavItem.click();
       } else {
         $notePanelTitle.innerHTML = "";
-        // $notePanel.innerHTML = "";
+        $notePanel.innerHTML = "";
+        disabledNoteCreateBtns(false);
       }
       $deletedNotebook.remove();
+
+    },
+  },
+  note: {
+    /**
+     * Creates a new note card in the UI based on provided note data
+     * @param {Object} noteData  - Data representing the new note
+     */
+
+    create(noteData) {
+      // Clear 'emptyNotesTemplate' from 'notePanel' if there is no note exists
+
+      if (!$notePanel.querySelector("[data-note]")) $notePanel.innerHTML = '';
+
+      // Append card in notePanel
+      const /** {HTMLElement} */ $card = Card(noteData);
+      $notePanel.appendChild($card);
+    },
+
+    /**
+     * Reads and displays a list of notes in the UI.
+     *
+     * @param {Array<Object>} noteList - List of note data to display
+     */
+    read(noteList) {
+      if (noteList.length) {
+        $notePanel.innerHTML = "";
+        noteList.forEach((noteData) => {
+          const /** {HTMLElement} */ $card = Card(noteData);
+          $notePanel.appendChild($card);
+        });
+      } else {
+        $notePanel.innerHTML = emptyNotesTemplate;
+      }
     },
   },
 };

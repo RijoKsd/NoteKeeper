@@ -5,6 +5,9 @@
  */
 import { Tooltip } from "./Tooltip.js";
 import { getRelativeTime } from "../utils.js";
+import { NoteModal } from "./Modal.js"; 
+import { db } from "../db.js";
+import { client } from "../client.js";
 
 /** Creates an HTML card element representing a note based on provided note data
  *
@@ -35,6 +38,27 @@ export const Card = function (noteData) {
   `;
 
 Tooltip($card.querySelector("[data-tooltip]"));
+
+
+/**
+ * Note detail view and edit functionlaity
+ * 
+ * Attaches a click event listener to card element
+ * When the card is click, it opens a modal with the note's details and allow for updating the not
+ */
+
+$card.addEventListener("click", function (){
+  const /** {Object} */ modal = NoteModal(title, text, getRelativeTime(postedOn));
+  modal.open();
+
+  modal.onSubmit(function (noteData){
+    const updatedData = db.update.note(id, noteData);
+
+    // Update the note in the client UI
+    client.note.update(id, updatedData);
+    modal.close();
+  })
+});
 
   return $card;
 };

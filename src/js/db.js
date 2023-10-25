@@ -3,7 +3,7 @@
 /**
  * Imports module
  */
-import { generateID, findNotebook, findNotebookIndex } from "./utils.js";
+import { generateID, findNotebook, findNotebookIndex, findNote } from "./utils.js";
 
 // DB Object
 
@@ -76,30 +76,28 @@ export const db = {
 
     /**
      * Adds a new note to a specified notebook in the database
-     * 
+     *
      * @function
      * @param {string} notebookId - The ID of the notebook to add the note to
      * @param {Object} object - The note object to add
      * @returns {Object} - The newly created note object
      */
 
-    note(notebookId, object){
+    note(notebookId, object) {
       readDB();
 
       const /** {Object} */ notebook = findNotebook(notekeeperDB, notebookId);
       const /** {Object} */ noteData = {
-        id: generateID(),
-        notebookId,
-        ...object,
-        postedOn: new Date().getTime()
-      }
+          id: generateID(),
+          notebookId,
+          ...object,
+          postedOn: new Date().getTime(),
+        };
 
-   
       notebook.notes.unshift(noteData);
       writeDB();
       return noteData;
-
-    }
+    },
   },
 
   get: {
@@ -113,19 +111,19 @@ export const db = {
       readDB();
       return notekeeperDB.notebooks;
     },
-/**
- * Retrieves all notes within a specified notebook.
- * 
- * @param {string} notebookId - The ID of the notebook to retrieve notes from.
- * @return {Array<object>} - An array of note objects
- */
+    /**
+     * Retrieves all notes within a specified notebook.
+     *
+     * @param {string} notebookId - The ID of the notebook to retrieve notes from.
+     * @return {Array<object>} - An array of note objects
+     */
 
-    note(notebookId){
+    note(notebookId) {
       readDB();
 
       const /**{Object} */ notebook = findNotebook(notekeeperDB, notebookId);
       return notebook.notes;
-    }
+    },
   },
   update: {
     /**
@@ -144,21 +142,43 @@ export const db = {
       writeDB();
       return notebook;
     },
-  },
-  delete: {
-/**
- * Deletes a notebook from the database
- * 
- * @function
- * @param {string} notebookId  - The ID of the notebook to be deleted
- */
 
-    notebook(notebookId){
+    /**
+     * Updates the content of a note in the database
+     *
+     * @function
+     * @param {string} noteId - The ID of the note to update
+     * @param {Object} object  - The updated data for the note
+     * @returns {Object} The updated note object
+     */
+
+    note(noteId, object) {
       readDB();
 
-      const /**{Number} */ notebookIndex = findNotebookIndex(notekeeperDB, notebookId);
+      const /** {Object} */ oldNote = findNote(notekeeperDB, noteId);
+      const /**{Object} */ newNote = Object.assign(oldNote, object);
+
+      writeDB();
+      return newNote;
+    },
+  },
+  delete: {
+    /**
+     * Deletes a notebook from the database
+     *
+     * @function
+     * @param {string} notebookId  - The ID of the notebook to be deleted
+     */
+
+    notebook(notebookId) {
+      readDB();
+
+      const /**{Number} */ notebookIndex = findNotebookIndex(
+          notekeeperDB,
+          notebookId
+        );
       notekeeperDB.notebooks.splice(notebookIndex, 1);
-       writeDB();
-    }
-  }
+      writeDB();
+    },
+  },
 };

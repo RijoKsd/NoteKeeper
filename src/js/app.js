@@ -173,7 +173,7 @@ addEventOnElements($noteCreateBtns, "click", function () {
 const renderExistedNote = function () {
   const /** {string | undefined} */ activeNotebookId = document.querySelector("[data-notebook].active")?.dataset.notebook;
 
-  if (activeNotebook) {
+  if (activeNotebookId) {
     const /** {Array<Object>} */ noteList = db.get.note(activeNotebookId); 
 
     // Display existing note

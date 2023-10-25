@@ -16,7 +16,9 @@ const /**{HTMLElement} */ $notePanelTitle = document.querySelector(
 const /**{HTMLElement} */ $notePanel =
     document.querySelector("[data-note-panel]");
 
-const /** {Array<HTMLElement } */ $noteCreateBtns = document.querySelectorAll("[data-note-create-btn]");
+const /** {Array<HTMLElement } */ $noteCreateBtns = document.querySelectorAll(
+    "[data-note-create-btn]"
+  );
 
 const /** {string} */ emptyNotesTemplate = `
  <div class="empty-notes">
@@ -28,16 +30,18 @@ const /** {string} */ emptyNotesTemplate = `
 
 /**
  * Enables or disables "Create Note" buttons based on whether there are any notebooks
- * 
+ *
  * @param {boolean} isThereAnyNotebooks - Indicates whether there are any notebooks
  */
 
-const disabledNoteCreateBtns = function(isThereAnyNotebook){
-  $noteCreateBtns.forEach($item =>{
-    $item[isThereAnyNotebook ? 'removeAttribute': 'setAttribute']('disabled', '');
-  })
-
-}
+const disabledNoteCreateBtns = function (isThereAnyNotebook) {
+  $noteCreateBtns.forEach(($item) => {
+    $item[isThereAnyNotebook ? "removeAttribute" : "setAttribute"](
+      "disabled",
+      ""
+    );
+  });
+};
 /**
  * The client object manages interactions with the user interface (UI) to create, read, update and delete notebooks and notes
  * It provides functions for performing these operations and updating the UI accordingly
@@ -126,7 +130,6 @@ export const client = {
         disabledNoteCreateBtns(false);
       }
       $deletedNotebook.remove();
-
     },
   },
   note: {
@@ -138,7 +141,7 @@ export const client = {
     create(noteData) {
       // Clear 'emptyNotesTemplate' from 'notePanel' if there is no note exists
 
-      if (!$notePanel.querySelector("[data-note]")) $notePanel.innerHTML = '';
+      if (!$notePanel.querySelector("[data-note]")) $notePanel.innerHTML = "";
 
       // Append card in notePanel
       const /** {HTMLElement} */ $card = Card(noteData);
@@ -160,6 +163,20 @@ export const client = {
       } else {
         $notePanel.innerHTML = emptyNotesTemplate;
       }
+    },
+    /**
+     * Updates a note card in the UI based on provided note data
+     *
+     * @param {string} noteId - ID of the note to update
+     * @param {Object} noteData  - New data for the note
+     */
+
+    update(noteId, noteData) {
+      const /** {HTMLElement} */ $oldCard = document.querySelector(
+          `[data-note = "${noteId}"]`
+        );
+      const /** {HTMLElement} */ $newCard = Card(noteData);
+      $notePanel.replaceChild($newCard, $oldCard); 
     },
   },
 };

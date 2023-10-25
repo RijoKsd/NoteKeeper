@@ -4,6 +4,66 @@ const /**{HTMLElement} */ $overlay = document.createElement("div");
 $overlay.classList.add("overlay", "modal-overlay");
 
 /**
+ * Creates and manages a modal for adding or editing notes. The modal allows user to input a note's title and text
+ * and provides functionality to submit and save the note
+ *
+ * @param {string} [title = 'Untitled'] - The default title for the note
+ * @param {string} [text='Add your note...'] - The default text for the note
+ * @param {string} [time=''] - The time associated with the note
+ * @returns {Object} - An object containing functions to open the modal, close the modal, and handle note submissions
+ */
+
+const NoteModal = function (
+  title = "Untitled",
+  text = "Add your note...",
+  time = " "
+) {
+  const /**{HTMLElement} */ $modal = document.createElement("div");
+  $modal.classList.add("modal");
+
+  $modal.innerHTML =  `
+    <button class="icon-btn large" aria-label="Close modal">
+      <span class="material-symbols-rounded" aria-hidden="true">close</span>
+      <div class="state-layer"></div>
+    </button>
+
+    <input
+      type="text"
+      placeholder="Untitled"
+      value="${title}"
+      class="modal-title text-title-medium"
+      data-note-field
+    />
+    <textarea
+      placeholder="Take a note ..."
+      class="modal-text text-body-large custom-scrollbar"
+      data-note-field
+    >
+${text}</textarea
+    >
+    <div class="modal-footer">
+      <span class="time text-label-large">${time}</span>
+      <button class="btn text" data-submit-btn>
+        <span class="text-label-large">Save</span>
+        <div class="state-layer"></div>
+      </button>
+    </div>
+  `;
+
+  const /** {HTMLElement} */ [$titleField, $textField] = $modal.querySelectorAll("[data-note-field]");
+
+  /**
+   * Opens the note modal by appending it to the document body and setting focus on the title field
+   */
+  const open = function (){
+    document.body.appendChild($modal);
+    document.body.appendChild($overlay);
+    $titleField.focus();
+  }
+  return { open}
+};
+
+/**
  * Creates and manages  a modal for confirming the deletion of a notebook
  *
  * @param {string} title  - The title of the notebook to be deleted
@@ -56,9 +116,9 @@ const DeleteConfirmModal = function (title) {
 
   const onSubmit = function (callback) {
     $actionBtns.forEach(($btn) =>
-      $btn.addEventListener("click", 
-      function () {
-        const /** {Boolean} */ isConfirm = this.dataset.actionBtn === "true" ? true : false;
+      $btn.addEventListener("click", function () {
+        const /** {Boolean} */ isConfirm =
+            this.dataset.actionBtn === "true" ? true : false;
 
         callback(isConfirm);
       })
@@ -68,4 +128,4 @@ const DeleteConfirmModal = function (title) {
   return { open, close, onSubmit };
 };
 
-export { DeleteConfirmModal };
+export { DeleteConfirmModal, NoteModal };

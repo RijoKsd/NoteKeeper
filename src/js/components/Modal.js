@@ -22,7 +22,7 @@ const NoteModal = function (
   $modal.classList.add("modal");
 
   $modal.innerHTML =  `
-    <button class="icon-btn large" aria-label="Close modal">
+    <button class="icon-btn large" aria-label="Close modal" data-close-btn>
       <span class="material-symbols-rounded" aria-hidden="true">close</span>
       <div class="state-layer"></div>
     </button>
@@ -60,7 +60,19 @@ ${text}</textarea
     document.body.appendChild($overlay);
     $titleField.focus();
   }
-  return { open}
+
+  /** Closes the note modal by removing it from the document body */
+
+  const close = function (){
+    document.body.removeChild($modal);
+    document.body.removeChild($overlay);
+  }
+
+  // Attach click event to closeBtn, when click call the close modal function
+  const /**{HTMLElement} */ $closeBtn = $modal.querySelector("[data-close-btn]");
+  $closeBtn.addEventListener("click", close);
+
+  return { open, close}
 };
 
 /**

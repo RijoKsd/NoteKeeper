@@ -14,8 +14,8 @@ $overlay.classList.add("overlay", "modal-overlay");
  */
 
 const NoteModal = function (
-  title = "Untitled",
-  text = "Add your note...",
+  title = "",
+  text = "",
   time = " "
 ) {
   const /**{HTMLElement} */ $modal = document.createElement("div");
